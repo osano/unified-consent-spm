@@ -5,8 +5,8 @@ inputs:
     description: "Version number (e.g. 1.0.0)"
     required: true
   github-token:
-    description: "GitHub token for pushing changes"
-    required: false
+    description: "GitHub token for authentication"
+    required: true
 
 runs:
   using: "composite"
@@ -37,6 +37,8 @@ runs:
 
     - name: Commit and Push Changes
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         git config --global user.name 'GitHub Action'
         git config --global user.email 'action@github.com'
