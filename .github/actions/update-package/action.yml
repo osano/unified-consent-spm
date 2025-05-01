@@ -35,7 +35,7 @@ runs:
       run: |
         ./scripts/update-version.py --version "$VERSION" --checksum "$CHECKSUM"
 
-    - name: Commit and Push Changes
+    - name: Commit, Tag and Push Changes
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
@@ -44,4 +44,5 @@ runs:
         git config --global user.email 'action@github.com'
         git add Package.swift
         git commit -m "chore: Update Package.swift to version $VERSION"
-        git push origin HEAD:main
+        git tag "$VERSION"
+        git push origin HEAD:main --tags
