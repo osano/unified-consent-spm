@@ -16,7 +16,7 @@ let package = Package(
         .binaryTarget(
             name: "UnifiedConsentSDK",
             url: "https://libraries.osano.com/ios/UnifiedConsentSDK/UnifiedConsentSDK-1.0.0.zip",
-            checksum: "a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938"
+            checksum: "b6037fe853db8814291ab370eddf2f13ba9a6bd4f9aacfa40e4466f5f7fb05c3"
         ),
     ]
 ) 
