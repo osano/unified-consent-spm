@@ -6,6 +6,9 @@ on:
       version:
         description: "Version number (e.g. 1.0.0)"
         required: true
+      token:
+        description: "GitHub token for authentication"
+        required: true
   repository_dispatch:
     types: [update-package]
 
@@ -15,10 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.OSANO_GITHUB_ACCESS_TOKEN }}
+          token: ${{ inputs.token }}
 
       - name: Update Package
         uses: ./.github/actions/update-package
         with:
           version: ${{ github.event.inputs.version || github.event.client_payload.version }}
-          github-token: ${{ secrets.OSANO_GITHUB_ACCESS_TOKEN }}
+          github-token: ${{ inputs.token }}
