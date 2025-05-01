@@ -1,0 +1,45 @@
+name: "Update Swift Package"
+description: "Updates Package.swift with new version and checksum for binary SDK"
+inputs:
+  version:
+    description: "Version number (e.g. 1.0.0)"
+    required: true
+  github-token:
+    description: "GitHub token for pushing changes"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+
+    - name: Make script executable
+      shell: bash
+      run: chmod +x scripts/update-version.py
+
+    - name: Download SDK and Calculate Checksum
+      shell: bash
+      run: |
+        SDK_URL="https://libraries.osano.com/ios/UnifiedConsentSDK/UnifiedConsentSDK-${{ inputs.version }}.zip"
+        curl -L -o UnifiedConsentSDK.zip "$SDK_URL"
+        CHECKSUM=$(swift package compute-checksum UnifiedConsentSDK.zip)
+        echo "CHECKSUM=$CHECKSUM" >> $GITHUB_ENV
+        echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+
+    - name: Update Package.swift
+      if: always()
+      shell: bash
+      run: |
+        ./scripts/update-version.py --version "$VERSION" --checksum "$CHECKSUM"
+
+    - name: Commit and Push Changes
+      shell: bash
+      run: |
+        git config --global user.name 'GitHub Action'
+        git config --global user.email 'action@github.com'
+        git add Package.swift
+        git commit -m "chore: Update Package.swift to version $VERSION"
+        git push origin HEAD:main
